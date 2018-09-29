@@ -1,0 +1,219 @@
+apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'realm-android'
+
+def compile_sdkVersion = rootProject.ext.version_type["compile_sdkversion"]
+def min_SdkVersion = rootProject.ext.version_type["min_sdkversion"]
+def target_SdkVersion = rootProject.ext.version_type["target_sdkversion"]
+
+def source_version = rootProject.ext.source_type["source_version_name"]
+
+def umeng_appkey = rootProject.ext.umeng["umeng_appkey"]
+def umeng_message_secret = rootProject.ext.umeng["umeng_message_secret"]
+
+android {
+    compileSdkVersion compile_sdkVersion
+    defaultConfig {
+        applicationId "com.xuancao.programframes"
+        minSdkVersion min_SdkVersion
+        targetSdkVersion target_SdkVersion
+        versionCode 1
+        versionName "1.0"
+        flavorDimensions "versionCode"
+
+        // dex突破65535的限制
+        multiDexEnabled true
+        // 默认渠道
+        manifestPlaceholders = [ZZY_CHANNEL_VALUE : "zzy",
+                                UMENG_APPKEY_VALUE : umeng_appkey,
+                                UMENG_MESSAGE_SECRET_VALUE : umeng_message_secret,
+                                ICON : "@mipmap/ic_launcher",
+                                LABEL : "@string/app_name"
+        ]
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
+    }
+
+    dexOptions {  //multiDex的一些相关配置，这样配置可以让你的编译速度更快
+        jumboMode true
+        incremental false         //开启或关闭优化编译效率，这个功能android studio默认是关闭的
+        javaMaxHeapSize "4g"      //增加java堆内存大小
+        preDexLibraries = false  // 让它不要对Lib做preDexing
+    }
+
+    configurations.all {
+        //循环一个个的依赖库
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            //获取当前循环到的依赖库
+            def requested = details.requested
+            //如果这个依赖库群组的名字是com.android.support
+            if (requested.group == 'com.android.support') {
+                //且其名字不是以multidex开头的
+                if (!requested.name.startsWith("multidex")) {
+                    //这里指定需要统一的依赖版本
+                    details.useVersion source_version
+                }
+            }
+        }
+    }
+
+
+
+    //配置签名信息
+    signingConfigs {
+        debug {
+            keyAlias 'xuancao'
+            keyPassword '123456'
+            storeFile file('xuancao.jks')
+            storePassword '123456'
+            v2SigningEnabled false
+        }
+        release {
+            keyAlias 'xuancao'
+            keyPassword '123456'
+            storeFile file('xuancao.jks')
+            storePassword '123456'
+            v2SigningEnabled false
+        }
+    }
+
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            buildConfigField "String", "UMENG_APP_KEY", "\"$umeng_appkey\""
+//            versionNameSuffix "-debug"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+
+        }
+        release {
+            signingConfig signingConfigs.release
+
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            buildConfigField "String", "UMENG_APP_KEY", "\"$umeng_appkey\""
+//            versionNameSuffix "-debug"
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            applicationVariants.all { variant ->
+                variant.outputs.all { output ->
+                    if (!variant.buildType.isDebuggable()) {
+                        //获取签名的名字 variant.signingConfig.name
+                        //要被替换的源字符串
+                        def sourceFile = "-${variant.flavorName}-${variant.buildType.name}"
+                        //替换的字符串
+                        def replaceFile = "xuancao-${defaultConfig.versionName}-${variant.productFlavors[0].name}"
+                        outputFileName = output.outputFile.name.replace(sourceFile, replaceFile);
+                        //遗留问题：如何获取当前module的name，如CodeBooke这个名字怎么获取到
+                    }
+                }
+            }
+        }
+
+    }
+
+
+
+    //多渠道打包
+    productFlavors {
+
+        '17'{}
+
+    }
+
+    productFlavors.all { flavor ->
+        flavor.manifestPlaceholders = [ZZY_CHANNEL_VALUE: name]
+    }
+
+    allprojects {
+        repositories {
+            mavenCentral()
+            maven { url "https://jitpack.io" }
+            maven { url 'https://maven.google.com' }
+            google()
+            jcenter()
+        }
+    }
+
+
+    android {
+        useLibrary 'org.apache.http.legacy'
+    }
+
+    //设置APK包的相关属性
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+        exclude 'META-INF/rxjava'
+        exclude 'META-INF/rxjava.properties'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:'+ source_version
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.android.support:design:'+ source_version
+
+
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.alibaba:fastjson:1.2.17'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    //logger
+    compile 'com.orhanobut:logger:2.2.0'
+
+    // dagger Annotation
+    compile 'com.google.dagger:dagger:2.11'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+
+    //butter knife
+    compile 'com.jakewharton:butterknife:8.7.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+
+    // Net
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+    compile 'com.squareup.retrofit2:converter-scalars:2.0.1'
+    compile "com.trello:rxlifecycle-components:$rxlifecycle_version"
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+
+    // Rx
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.2'
+    compile 'com.trello.rxlifecycle2:rxlifecycle:2.1.0'
+    compile 'com.trello.rxlifecycle2:rxlifecycle-android:2.1.0'
+    compile 'com.trello.rxlifecycle2:rxlifecycle-components:2.1.0'
+    compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+
+
+}

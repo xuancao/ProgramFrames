@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.xuancao.programframes.widgets.tabview.TabView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tabView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:imageViewTextViewMargin="3dp"
+    app:tab_imageViewHeight="20dp"
+    app:tab_imageViewWidth="20dp"
+    app:tab_tabViewBackgroundColor="@color/common_color_FFFFFF"
+    app:tab_tabViewDefaultPosition="0"
+    app:tab_tabViewGravity="bottom"
+    app:tab_tabViewHeight="@dimen/common_bottom_bar_height"
+    app:tab_textViewSelColor="@color/global_color"
+    app:tab_textViewSize="12sp"
+    app:tab_textViewUnSelColor="@color/common_color_999999" />

@@ -1,0 +1,20 @@
+ext {
+
+    version_type = [
+            "compile_sdkversion": 28,
+            "min_sdkversion":     16,
+            "target_sdkversion":  28
+    ]
+
+    umeng = [
+            "umeng_appkey" : "5acf03def29d980a3100009b",
+            "umeng_message_secret" : "b9b135da7081dd4271aa3d32f42f6ebc"
+    ]
+
+    source_type = [
+            "source_version_name" : '28.0.0-rc01'
+    ]
+
+
+
+}
