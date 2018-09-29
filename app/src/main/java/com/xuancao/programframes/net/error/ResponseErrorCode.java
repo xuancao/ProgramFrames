@@ -1,9 +1,5 @@
 package com.xuancao.programframes.net.error;
 
-/**
- * Created by leon on 2018/5/31.
- */
-
 public interface ResponseErrorCode {
     int SUCCESS = 200;       //框架请求成功code
 

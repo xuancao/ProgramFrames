@@ -11,9 +11,6 @@ import com.xuancao.programframes.ui.module.mine.MineFragment;
 
 import dagger.Component;
 
-/**
- * Created by leon on 16/6/2.
- */
 @PerFragment
 @Component(modules = FragmentModule.class, dependencies = AppComponent.class)
 public interface DataFragmentComponent {

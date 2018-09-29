@@ -14,10 +14,6 @@ import java.io.IOException;
 import okhttp3.ResponseBody;
 import retrofit2.Converter;
 
-/**
- * @param <T>
- * @author lqx
- */
 public class CustomGsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
 
     private final Gson gson;

@@ -7,10 +7,6 @@ import com.xuancao.programframes.ui.receiver.NetWorkStateReceiver;
 
 import dagger.Component;
 
-/**
- * Created by leon on 2017/9/24.
- */
-
 @PerService
 @Component(modules = BroadcastModule.class, dependencies = AppComponent.class)
 public interface BroadcastComponent {

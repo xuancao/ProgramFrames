@@ -12,10 +12,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 
-/**
- * @author lqx
- * 自定义GsonConverterFactory
- */
 public class CustomGsonConverterFactory extends Converter.Factory {
     public static CustomGsonConverterFactory create() {
         return create(new Gson());

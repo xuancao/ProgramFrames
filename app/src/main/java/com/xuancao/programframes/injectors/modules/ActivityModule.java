@@ -7,9 +7,6 @@ import com.xuancao.programframes.injectors.scopes.PerActivity;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by leon on 2016/1/6.
- */
 @Module
 public class ActivityModule {
 

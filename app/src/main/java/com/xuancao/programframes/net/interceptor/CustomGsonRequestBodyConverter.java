@@ -14,10 +14,6 @@ import okhttp3.RequestBody;
 import okio.Buffer;
 import retrofit2.Converter;
 
-/**
- * @param <T>
- * @author lqx
- */
 public class CustomGsonRequestBodyConverter<T> implements Converter<T, RequestBody> {
 
     private static final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=UTF-8");

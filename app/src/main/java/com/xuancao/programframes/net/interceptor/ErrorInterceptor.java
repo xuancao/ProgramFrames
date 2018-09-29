@@ -10,7 +10,6 @@ import okhttp3.Interceptor;
 
 /**
  * 错误拦截器
- * Created by leon on 2018/5/31.
  */
 
 public class ErrorInterceptor implements Interceptor {

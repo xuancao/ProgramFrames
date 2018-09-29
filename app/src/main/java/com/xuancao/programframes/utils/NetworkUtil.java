@@ -5,10 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 
-/**
- * Created by leon on 2018/3/27.
- */
-
 public class NetworkUtil {
     /**
      * 判断是否有网络连接

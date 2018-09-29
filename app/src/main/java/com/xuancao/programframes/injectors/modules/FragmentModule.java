@@ -8,9 +8,6 @@ import com.xuancao.programframes.injectors.scopes.PerFragment;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by leon on 2017/11/6.
- */
 @Module
 public class FragmentModule {
 

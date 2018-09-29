@@ -24,7 +24,6 @@ import okio.BufferedSource;
 
 /**
  * 请求日志拦截器
- * Created by linfeng on 2015/11/4.
  */
 public class HttpLoggingInterceptor implements Interceptor {
     private static final Charset UTF8 = Charset.forName("UTF-8");

@@ -6,10 +6,6 @@ import android.content.Context;
 
 import java.util.Stack;
 
-/**
- * @author shvmily@126.com
- */
-
 public class ActManager {
     private static Stack<Activity> activityStack;
 

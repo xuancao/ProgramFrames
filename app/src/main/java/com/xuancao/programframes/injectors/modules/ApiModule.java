@@ -24,10 +24,6 @@ import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 
-
-/**
- * Created by linfeng on 2017/5/13.
- */
 @Module
 public class ApiModule {
 
